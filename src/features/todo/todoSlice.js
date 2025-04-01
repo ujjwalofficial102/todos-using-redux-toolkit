@@ -7,6 +7,7 @@ const initialState = {
       text: "Hello World",
     },
   ],
+  editingText: "",
 };
 
 export const todoSlice = createSlice({
@@ -20,13 +21,18 @@ export const todoSlice = createSlice({
         text: action.payload,
       };
       state.todos.push(todo);
+      state.editingText = "";
     },
     removeTodo: (state, action) => {
       state.todos = state.todos.filter((todo) => todo.id != action.payload);
     },
+    setEditingText: (state, action) => {
+      state.todos = state.todos.filter((todo) => todo.id != action.payload.id);
+      state.editingText = action.payload.text;
+    },
   },
 });
 
-export const { addTodo, removeTodo } = todoSlice.actions;
+export const { addTodo, removeTodo, setEditingText } = todoSlice.actions;
 
 export default todoSlice.reducer;
