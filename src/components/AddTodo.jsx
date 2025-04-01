@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTodo } from "../features/todo/todoSlice";
+import { addTodo, updateTodo } from "../features/todo/todoSlice";
 
 function AddTodo() {
   const [input, setInput] = useState("");
   const dispatch = useDispatch();
   const editingText = useSelector((state) => state.editingText);
+  const editingId = useSelector((state) => state.editingId);
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -17,7 +18,11 @@ function AddTodo() {
 
   const addTodoHandler = (e) => {
     e.preventDefault();
-    dispatch(addTodo(input));
+    if (editingId) {
+      dispatch(updateTodo({ id: editingId, text: input }));
+    } else {
+      dispatch(addTodo(input));
+    }
     setInput("");
   };
 
@@ -35,7 +40,7 @@ function AddTodo() {
         type="submit"
         className="text-white cursor-pointer bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"
       >
-        Add Todo
+        {editingText ? <>Update Todo</> : <>Add Todo</>}
       </button>
     </form>
   );

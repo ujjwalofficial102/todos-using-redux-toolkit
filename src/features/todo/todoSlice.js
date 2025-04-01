@@ -8,6 +8,7 @@ const initialState = {
     },
   ],
   editingText: "",
+  editingId: null,
 };
 
 export const todoSlice = createSlice({
@@ -21,18 +22,27 @@ export const todoSlice = createSlice({
         text: action.payload,
       };
       state.todos.push(todo);
-      state.editingText = "";
     },
     removeTodo: (state, action) => {
-      state.todos = state.todos.filter((todo) => todo.id != action.payload);
+      state.todos = state.todos.filter((todo) => todo.id !== action.payload);
     },
     setEditingText: (state, action) => {
-      state.todos = state.todos.filter((todo) => todo.id != action.payload.id);
       state.editingText = action.payload.text;
+      state.editingId = action.payload.id;
+    },
+    updateTodo: (state, action) => {
+      state.todos = state.todos.map((todo) =>
+        todo.id === action.payload.id
+          ? { ...todo, text: action.payload.text }
+          : todo
+      );
+      state.editingId = null;
+      state.editingText = "";
     },
   },
 });
 
-export const { addTodo, removeTodo, setEditingText } = todoSlice.actions;
+export const { addTodo, removeTodo, setEditingText, updateTodo } =
+  todoSlice.actions;
 
 export default todoSlice.reducer;
